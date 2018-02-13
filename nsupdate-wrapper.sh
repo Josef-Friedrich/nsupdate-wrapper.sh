@@ -98,8 +98,9 @@ _getopts() {
 					short-description) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
 					ttl=?*) OPT_TTL="$LONG_OPTARG" ;;
 					version) echo "$VERSION" ; exit 0 ;;
+					zone=?*) OPT_ZONE="$LONG_OPTARG" ;;
 
-					device*|name-server*|private-key*|record*|ttl*)
+					device*|name-server*|private-key*|record*|ttl*|zone*)
 						echo "Option “--$OPTARG” requires an argument!" >&2
 						exit 3
 						;;
@@ -154,10 +155,11 @@ _get_nsupdate_commands() {
 		RESOURCE_RECORD_TYPE='A'
 		IP="$IPV4"
 	fi
-	echo "server $OPT_NAMESERVER
+	echo "server $OPT_NAME_SERVER
 zone $OPT_ZONE
 update delete $OPT_RECORD $RESOURCE_RECORD_TYPE
 update add $OPT_RECORD $OPT_TTL $RESOURCE_RECORD_TYPE $IP
+show
 send"
 }
 
@@ -183,7 +185,9 @@ fi
 
 BINARY="$(_get_binary)"
 
-if [ -z "$OPT_NAMESERVER" ] || [ -z "$OPT_ZONE" ] || [ -z "$OPT_RECORD" ]; then
+_getopts $@
+
+if [ -z "$OPT_NAME_SERVER" ] || [ -z "$OPT_ZONE" ] || [ -z "$OPT_RECORD" ]; then
 	echo 'You have to specify this options: --name-server --zone --record' >&2
 	exit 11
 fi
@@ -199,5 +203,6 @@ fi
 
 if [ -n "$OPT_IPV4" ]; then
 	IPV4="$(_get_external_ipv4)"
-	_get_nsupdate_commands | nsupdate -K "$OPT_PRIVATE_KEY"
+	_get_nsupdate_commands
+	_get_nsupdate_commands | nsupdate -k"$OPT_PRIVATE_KEY"
 fi

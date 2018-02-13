@@ -205,3 +205,25 @@ setup() {
 	run _getopts --version=123
 	[ "$status" -eq 4 ]
 }
+
+# -z, --zone
+
+@test "_getopts -z 123" {
+	_getopts -z 123
+	[ "$OPT_ZONE" -eq 123 ]
+}
+
+@test "_getopts -z" {
+	run _getopts -z
+	[ "$status" -eq 3 ]
+}
+
+@test "_getopts --zone=123" {
+	_getopts --zone=123
+	[ "$OPT_ZONE" -eq 123 ]
+}
+
+@test "_getopts --zone" {
+	run _getopts --zone
+	[ "$status" -eq 3 ]
+}
