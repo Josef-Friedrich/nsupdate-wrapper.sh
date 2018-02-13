@@ -5,6 +5,40 @@ setup() {
 	source_exec nsupdate-wrapper.sh
 }
 
+# -4, --ipv4-only
+
+@test "_getopts -4" {
+	_getopts -4
+	[ "$OPT_IPV4" -eq 1 ]
+}
+
+@test "_getopts --ipv4-only" {
+	_getopts --ipv4-only
+	[ "$OPT_IPV4" -eq 1 ]
+}
+
+@test "_getopts --ipv4-only=123" {
+	run _getopts --ipv4-only=123
+	[ "$status" -eq 4 ]
+}
+
+# -6, --ipv6-only
+
+@test "_getopts -6" {
+	_getopts -6
+	[ "$OPT_IPV6" -eq 1 ]
+}
+
+@test "_getopts --ipv6-only" {
+	_getopts --ipv6-only
+	[ "$OPT_IPV6" -eq 1 ]
+}
+
+@test "_getopts --ipv6-only=123" {
+	run _getopts --ipv6-only=123
+	[ "$status" -eq 4 ]
+}
+
 # -d, --device
 
 @test "_getopts -d 123" {

@@ -5,12 +5,10 @@ setup() {
 	source_exec nsupdate-wrapper.sh
 }
 
-@test "_check_get_binaries" {
-	run _check_get_binaries
+@test "_get_binary" {
+	run _get_binary
 	[ "$status" -eq 0 ]
-
-	_check_get_binaries
-	[ "$BIN" = "curl -fs" ]
+	[  "$(_get_binary)" = 'curl -fs' ]
 }
 
 @test "_get_nsupdate_commands" {
@@ -53,4 +51,10 @@ setup() {
 	run _get_ipv6
 	[ "$status" -eq 9 ]
 	[ "${lines[0]}" = "No device given!" ]
+}
+
+@test "_get_external_ipv4" {
+	BINARY="$(_get_binary)"
+	IPV4="$(_get_external_ipv4)"
+	[ -n "$IPV4" ]
 }

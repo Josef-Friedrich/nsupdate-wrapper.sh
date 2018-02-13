@@ -31,11 +31,15 @@ PROJECT_PAGES="https://github.com/JosefFriedrich-shell/nsupdate-wrapper.sh"
 SHORT_DESCRIPTION='Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6.'
 USAGE="$NAME v$VERSION
 
-Usage: $NAME [-dhnprstvz]
+Usage: $NAME [-46dhnprstvz]
 
 $SHORT_DESCRIPTION
 
 Options:
+	-4, --ipv4-only
+	  Update the ipv4 / A record only.
+	-6, --ipv6-only
+	  Update the ipv6 / AAAA record only.
 	-d, --device
 	  The interface (device to look for an IP address), e. g. “eth0”
 	-h, --help
@@ -64,9 +68,10 @@ Options:
 # Missing argument: 3
 # No argument allowed: 4
 _getopts() {
-	while getopts ':d:hn:p:r:st:vz:-:' OPT ; do
+	while getopts ':46d:hn:p:r:st:vz:-:' OPT ; do
 		case $OPT in
-
+			4) OPT_IPV4=1 ;;
+			6) OPT_IPV6=1 ;;
 			d) OPT_DEVICE="$OPTARG" ;;
 			h) echo "$USAGE" ; exit 0 ;;
 			n) OPT_NAME_SERVER="$OPTARG" ;;
@@ -83,6 +88,8 @@ _getopts() {
 				LONG_OPTARG="${OPTARG#*=}"
 
 				case $OPTARG in
+					ipv4-only) OPT_IPV4=1 ;;
+					ipv6-only) OPT_IPV6=1 ;;
 					device=?*) OPT_DEVICE="$LONG_OPTARG" ;;
 					help) echo "$USAGE" ; exit 0 ;;
 					name-server=?*) OPT_NAME_SERVER="$LONG_OPTARG" ;;
@@ -97,7 +104,7 @@ _getopts() {
 						exit 3
 						;;
 
-					help*|short-description*|version*)
+					ipv4-only*|ipv6-only*|help*|short-description*|version*)
 						echo "No argument allowed for the option “--$OPTARG”!" >&2
 						exit 4
 						;;
@@ -120,10 +127,8 @@ _get_ipv4() {
 
 # https://github.com/phoemur/ipgetter/blob/master/ipgetter.py
 _get_external_ipv4() {
-	curl -s http://myexternalip.com/raw
-	http://v6.ident.me/
-
-	external_ip=$(curl -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]\{7,15\}\).*/\1/')
+	# http://myexternalip.com/raw
+	$BINARY http://v4.ident.me/
 }
 
 
@@ -156,17 +161,34 @@ update add $OPT_RECORD $OPT_TTL $RESOURCE_RECORD_TYPE $IP
 send"
 }
 
-_check_get_binaries() {
+_get_binary() {
 	if command -v curl > /dev/null 2>&1 ; then
 		#-f, --fail -> exit code 22 on error
 		#-s, --silent
-		BIN="curl -fs"
+		echo 'curl -fs'
 	elif command -v wget > /dev/null 2>&1 ; then
-		BIN="wget -q -O -"
+		echo 'wget -q -O -'
 	else
-		echo "Neither curl nor wget found!"
+		echo "Neither “curl” nor “wget” found!"
 		exit 1
 	fi
 }
 
 ## This SEPARATOR is required for test purposes. Please don’t remove! ##
+
+if ! command -v nsupdate > /dev/null 2>&1 ; then
+	echo 'Command “nsupdate” could not be found!'
+	exit 1
+fi
+
+BINARY="$(_get_binary)"
+
+
+if [ -z "$OPT_TTL" ]; then
+	OPT_TTL=3600
+fi
+
+if [ -z "$OPT_IPV4" ] && [ -z "$OPT_IPV6" ]; then
+	OPT_IPV4=1
+	OPT_IPV6=1
+fi
