@@ -220,8 +220,23 @@ if [ -n  "$OPT_KEY_FILE" ]; then
 elif [ -n  "$OPT_LITERAL_KEY" ]; then
 	AUTH="-y $OPT_LITERAL_KEY"
 fi
+
+########################################################################
+
 if [ -n "$OPT_IPV4" ]; then
 	IPV4="$(_get_external_ipv4)"
-	_get_nsupdate_commands
-	_get_nsupdate_commands | nsupdate $AUTH
+	if [ -n "$IPV4" ]; then
+		_get_nsupdate_commands | nsupdate $AUTH
+	fi
+fi
+
+IPV4=
+
+########################################################################
+
+if [ -n "$OPT_IPV6" ]; then
+	IPV6="$(_get_ipv6)"
+	if [ -n "$IPV6" ]; then
+		_get_nsupdate_commands | nsupdate $AUTH
+	fi
 fi
