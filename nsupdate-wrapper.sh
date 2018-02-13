@@ -114,8 +114,17 @@ _get_ipv4() {
 
 }
 
+# https://github.com/phoemur/ipgetter/blob/master/ipgetter.py
 _get_external_ipv4() {
+	curl -s http://myexternalip.com/raw
+	http://v6.ident.me/
+
 	external_ip=$(curl -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]\{7,15\}\).*/\1/')
+}
+
+
+_get_external_ipv6() {
+	http://v6.ident.me/
 }
 
 _get_ipv6() {
@@ -130,6 +139,19 @@ _nsupdate() {
 	show
 	send" | nsupdate -k $priv_key -v 2>&1)
 	logger "$nsupdate_out"
+}
+
+_check_get_binaries() {
+	if command -v curl > /dev/null 2>&1 ; then
+		#-f, --fail -> exit code 22 on error
+		#-s, --silent
+		BIN="curl -fs"
+	elif command -v wget > /dev/null 2>&1 ; then
+		BIN="wget -q -O -"
+	else
+		echo "Neither curl nor wget found!"
+		exit 1
+	fi
 }
 
 ## This SEPARATOR is required for test purposes. Please don’t remove! ##
