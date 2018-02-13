@@ -58,3 +58,7 @@ setup() {
 	IPV4="$(_get_external_ipv4)"
 	[ -n "$IPV4" ]
 }
+
+@test "_get_ipv6" {
+	mock_path test/bin
+}
