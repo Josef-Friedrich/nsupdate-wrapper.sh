@@ -23,8 +23,8 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-NAME="$(basename "$0")"
-PROJECT_NAME="$(basename "$(pwd)")"
+NAME="nsupdate-wrapper.sh"
+PROJECT_NAME="nsupdate-wrapper"
 FIRST_RELEASE=2018-02-13
 VERSION=1.0
 PROJECT_PAGES="https://github.com/JosefFriedrich-shell/nsupdate-wrapper.sh"
@@ -40,7 +40,7 @@ Options:
 	  Show this help message.
 	-n, --nameserver
 	  DNS server to send updates to.
-	-p, --privkey
+	-p, --private-key
 	  Path to private key.
 	-r, --record
 	  Record to update.
@@ -62,29 +62,17 @@ Options:
 # Missing argument: 3
 # No argument allowed: 4
 _getopts() {
-	while getopts ':Aab:cdhrSstv-:' OPT ; do
+	while getopts ':hn:p:r:st:vz:-:' OPT ; do
 		case $OPT in
-			A) OPT_ALL=1;;
-			a)
-				OPT_ALPHA=1
-				;;
 
-			b)
-				OPT_BRAVO="$OPTARG"
-				;;
-
-			c)
-				OPT_CHARLIE=1
-				;;
-
-			d) OPT_DEPENDENCIES=1 ;;
 			h) echo "$USAGE" ; exit 0 ;;
-			r) OPT_README=1 ;;
-			S) OPT_SKELETON=1 ;;
+			n) OPT_NAME_SERVER="$OPTARG" ;;
+			p) OPT_PRIVATE_KEY="$OPTARG" ;;
+			r) OPT_RECORD="$OPTARG" ;;
 			s) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
-			t) OPT_TEST=1;;
+			t) OPT_TTL="$OPTARG" ;;
 			v) echo "$VERSION" ; exit 0 ;;
-
+			z) OPT_ZONE="$OPTARG" ;;
 			\?) echo "Invalid option “-$OPTARG”!" >&2 ; exit 2 ;;
 			:) echo "Option “-$OPTARG” requires an argument!" >&2 ; exit 3 ;;
 
@@ -92,39 +80,20 @@ _getopts() {
 				LONG_OPTARG="${OPTARG#*=}"
 
 				case $OPTARG in
-					sync-all) OPT_ALL=1 ;;
-					alpha)
-						OPT_ALPHA=1
-						;;
+					help) echo "$USAGE" ; exit 0 ;;
+					name-server=?*) OPT_NAME_SERVER="$LONG_OPTARG" ;;
+					private-key=?*) OPT_PRIVATE_KEY="$LONG_OPTARG" ;;
+					record=?*) OPT_RECORD="$LONG_OPTARG" ;;
+					short-description) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
+					ttl) OPT_TTL="$LONG_OPTARG" ;;
+					version) echo "$VERSION" ; exit 0 ;;
 
-					bravo=?*)
-						OPT_BRAVO="$LONG_OPTARG"
-						;;
-
-					charlie)
-						OPT_CHARLIE=1
-						;;
-
-					sync-dependencies) OPT_DEPENDENCIES=1 ;;
-
-					alpha*|charlie*)
-						echo "No argument allowed for the option “--$OPTARG”!" >&2
-						exit 4
-						;;
-
-					bravo*)
+					name-server*|private-key*|record*|ttl*)
 						echo "Option “--$OPTARG” requires an argument!" >&2
 						exit 3
 						;;
 
-					help) echo "$USAGE" ; exit 0 ;;
-					render-readme) OPT_README=1 ;;
-					sync-skeleton) OPT_SKELETON=1 ;;
-					short-description) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
-					test) OPT_TEST=1 ;;
-					version) echo "$VERSION" ; exit 0 ;;
-
-					sync-dependencies*|help*|render-readme*|sync-skeleton*|short-description*|test*|version*)
+					help*|short-description*|version*)
 						echo "No argument allowed for the option “--$OPTARG”!" >&2
 						exit 4
 						;;
@@ -139,3 +108,5 @@ _getopts() {
 	done
 	GETOPTS_SHIFT=$((OPTIND - 1))
 }
+
+## This SEPARATOR is required for test purposes. Please don’t remove! ##
