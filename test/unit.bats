@@ -50,7 +50,7 @@ setup() {
 
 	mock_path test/bin
 	IPV6="$(_get_ipv6)"
-	[ "$IPV6" = '2003:68:4c06:3300:b832:14ae:bea5:6e7c' ]
+	[ "$IPV6" = '200c:ef45:4c06:3300:b832:fe2d:bb21:60bd' ]
 }
 
 @test "_get_ipv6: no device" {

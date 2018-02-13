@@ -1,1 +1,9 @@
 #! /bin/sh
+
+while read LINE; do
+        echo "Input: ${LINE}"
+done
+
+for ARGUMENT in "$@"; do
+        echo "Arg: ${ARGUMENT}"
+done
