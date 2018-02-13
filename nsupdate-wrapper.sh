@@ -31,11 +31,13 @@ PROJECT_PAGES="https://github.com/JosefFriedrich-shell/nsupdate-wrapper.sh"
 SHORT_DESCRIPTION='Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6.'
 USAGE="$NAME v$VERSION
 
-Usage: $NAME [-AdhrSstv]
+Usage: $NAME [-dhnprstvz]
 
 $SHORT_DESCRIPTION
 
 Options:
+	-d, --device
+	  The interface (device to look for an IP address), e. g. “eth0”
 	-h, --help
 	  Show this help message.
 	-n, --nameserver
@@ -62,9 +64,10 @@ Options:
 # Missing argument: 3
 # No argument allowed: 4
 _getopts() {
-	while getopts ':hn:p:r:st:vz:-:' OPT ; do
+	while getopts ':d:hn:p:r:st:vz:-:' OPT ; do
 		case $OPT in
 
+			d) OPT_DEVICE="$OPTARG" ;;
 			h) echo "$USAGE" ; exit 0 ;;
 			n) OPT_NAME_SERVER="$OPTARG" ;;
 			p) OPT_PRIVATE_KEY="$OPTARG" ;;
@@ -80,6 +83,7 @@ _getopts() {
 				LONG_OPTARG="${OPTARG#*=}"
 
 				case $OPTARG in
+					device=?*) OPT_DEVICE="$LONG_OPTARG" ;;
 					help) echo "$USAGE" ; exit 0 ;;
 					name-server=?*) OPT_NAME_SERVER="$LONG_OPTARG" ;;
 					private-key=?*) OPT_PRIVATE_KEY="$LONG_OPTARG" ;;
@@ -88,7 +92,7 @@ _getopts() {
 					ttl=?*) OPT_TTL="$LONG_OPTARG" ;;
 					version) echo "$VERSION" ; exit 0 ;;
 
-					name-server*|private-key*|record*|ttl*)
+					device*|name-server*|private-key*|record*|ttl*)
 						echo "Option “--$OPTARG” requires an argument!" >&2
 						exit 3
 						;;
@@ -128,7 +132,13 @@ _get_external_ipv6() {
 }
 
 _get_ipv6() {
-	address=$(ip -6 addr list scope global $device | grep -v " fd" | sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1)
+	if [ -z "$OPT_DEVICE" ] ; then
+		echo "No device given!" >&2
+		exit 9
+	fi
+	ip -6 addr list scope global $OPT_DEVICE | \
+		grep -v " fd" | \
+		sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1
 }
 
 _get_nsupdate_commands() {

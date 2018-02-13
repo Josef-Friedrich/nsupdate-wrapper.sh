@@ -42,3 +42,15 @@ setup() {
 	[ "${lines[3]}" = "update add sub.example.com. 123 AAAA 1::1"  ]
 	[ "${lines[4]}" = "send" ]
 }
+
+@test "_get_ipv6" {
+	OPT_DEVICE='XXX'
+	run _get_ipv6
+	[ "$status" -eq 0 ]
+}
+
+@test "_get_ipv6: no device" {
+	run _get_ipv6
+	[ "$status" -eq 9 ]
+	[ "${lines[0]}" = "No device given!" ]
+}

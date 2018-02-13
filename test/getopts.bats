@@ -5,6 +5,28 @@ setup() {
 	source_exec nsupdate-wrapper.sh
 }
 
+# -d, --device
+
+@test "_getopts -d 123" {
+	_getopts -d 123
+	[ "$OPT_DEVICE" -eq 123 ]
+}
+
+@test "_getopts -d" {
+	run _getopts -d
+	[ "$status" -eq 3 ]
+}
+
+@test "_getopts --device=123" {
+	_getopts --device=123
+	[ "$OPT_DEVICE" -eq 123 ]
+}
+
+@test "_getopts --device" {
+	run _getopts --device
+	[ "$status" -eq 3 ]
+}
+
 # -h, --help
 
 @test "_getopts -h" {
