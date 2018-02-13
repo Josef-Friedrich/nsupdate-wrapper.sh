@@ -45,6 +45,10 @@ setup() {
 	OPT_DEVICE='XXX'
 	run _get_ipv6
 	[ "$status" -eq 0 ]
+
+	mock_path test/bin
+	IPV6="$(_get_ipv6)"
+	[ "$IPV6" = '2003:68:4c06:3300:b832:14ae:bea5:6e7c' ]
 }
 
 @test "_get_ipv6: no device" {
@@ -57,8 +61,4 @@ setup() {
 	BINARY="$(_get_binary)"
 	IPV4="$(_get_external_ipv4)"
 	[ -n "$IPV4" ]
-}
-
-@test "_get_ipv6" {
-	mock_path test/bin
 }
