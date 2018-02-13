@@ -109,4 +109,27 @@ _getopts() {
 	GETOPTS_SHIFT=$((OPTIND - 1))
 }
 
+_get_ipv4() {
+	ipaddr=`ip -4 addr show dev ${wan} | grep inet | sed -e 's/.*inet \([.0-9]*\).*/\1/'`
+
+}
+
+_get_external_ipv4() {
+	external_ip=$(curl -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]\{7,15\}\).*/\1/')
+}
+
+_get_ipv6() {
+	address=$(ip -6 addr list scope global $device | grep -v " fd" | sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1)
+}
+
+_nsupdate() {
+	nsupdate_out=$(echo "server $nameserver
+	zone $zone
+	update delete $record A
+	update add $record $ttl A $external_ip
+	show
+	send" | nsupdate -k $priv_key -v 2>&1)
+	logger "$nsupdate_out"
+}
+
 ## This SEPARATOR is required for test purposes. Please don’t remove! ##
