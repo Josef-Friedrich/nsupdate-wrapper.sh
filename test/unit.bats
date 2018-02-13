@@ -58,7 +58,8 @@ setup() {
 }
 
 @test "_get_external_ipv4" {
+	mock_path test/bin
 	BINARY="$(_get_binary)"
 	IPV4="$(_get_external_ipv4)"
-	[ -n "$IPV4" ]
+	[ "$IPV4" = '1.2.3.4' ]
 }

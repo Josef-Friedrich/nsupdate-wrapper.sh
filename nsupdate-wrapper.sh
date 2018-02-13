@@ -183,6 +183,10 @@ fi
 
 BINARY="$(_get_binary)"
 
+if [ -z "$OPT_NAMESERVER" ] || [ -z "$OPT_ZONE" ] || [ -z "$OPT_RECORD" ]; then
+	echo 'You have to specify this options: --name-server --zone --record' >&2
+	exit 11
+fi
 
 if [ -z "$OPT_TTL" ]; then
 	OPT_TTL=3600
@@ -191,4 +195,9 @@ fi
 if [ -z "$OPT_IPV4" ] && [ -z "$OPT_IPV6" ]; then
 	OPT_IPV4=1
 	OPT_IPV6=1
+fi
+
+if [ -n "$OPT_IPV4" ]; then
+	IPV4="$(_get_external_ipv4)"
+	_get_nsupdate_commands | nsupdate -K "$OPT_PRIVATE_KEY"
 fi
