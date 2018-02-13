@@ -131,14 +131,19 @@ _get_ipv6() {
 	address=$(ip -6 addr list scope global $device | grep -v " fd" | sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1)
 }
 
-_nsupdate() {
-	nsupdate_out=$(echo "server $nameserver
-	zone $zone
-	update delete $record A
-	update add $record $ttl A $external_ip
-	show
-	send" | nsupdate -k $priv_key -v 2>&1)
-	logger "$nsupdate_out"
+_get_nsupdate_commands() {
+	if [ -n "$IPV6" ]; then
+		RESOURCE_RECORD_TYPE='AAAA'
+		IP="$IPV6"
+	else
+		RESOURCE_RECORD_TYPE='A'
+		IP="$IPV4"
+	fi
+	echo "server $OPT_NAMESERVER
+zone $OPT_ZONE
+update delete $OPT_RECORD $RESOURCE_RECORD_TYPE
+update add $OPT_RECORD $OPT_TTL $RESOURCE_RECORD_TYPE $IP
+send"
 }
 
 _check_get_binaries() {
