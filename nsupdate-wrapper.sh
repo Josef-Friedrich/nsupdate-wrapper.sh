@@ -41,19 +41,19 @@ Options:
 	-h, --help
 	  Show this help message.
 	-n, --nameserver
-	  DNS server to send updates to.
+	  DNS server to send updates to, e. g. “ns.example.com”
 	-p, --private-key
 	  Path to private key.
 	-r, --record
-	  Record to update.
+	  Record to update, e. g. “subdomain.example.com.”
 	-s, --short-description
 	  Show a short description / summary.
 	-t, --ttl
-	  Time to live for updated record; default 3600s.
+	  Time to live for updated record; default 3600s., e. g. “300”
 	-v, --version
 	  Show the version number of this script.
 	-z, --zone
-	  Zone to update
+	  Zone to update, e. g. “example.com.”
 
 "
 
