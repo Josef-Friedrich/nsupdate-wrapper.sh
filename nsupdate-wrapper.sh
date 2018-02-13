@@ -85,7 +85,7 @@ _getopts() {
 					private-key=?*) OPT_PRIVATE_KEY="$LONG_OPTARG" ;;
 					record=?*) OPT_RECORD="$LONG_OPTARG" ;;
 					short-description) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
-					ttl) OPT_TTL="$LONG_OPTARG" ;;
+					ttl=?*) OPT_TTL="$LONG_OPTARG" ;;
 					version) echo "$VERSION" ; exit 0 ;;
 
 					name-server*|private-key*|record*|ttl*)

@@ -89,3 +89,63 @@ setup() {
 	run _getopts --record
 	[ "$status" -eq 3 ]
 }
+
+# -s, --short-description
+
+@test "_getopts -s" {
+	run _getopts -s
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = 'Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6.' ]
+}
+
+@test "_getopts --short-description" {
+	run _getopts --short-description
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = 'Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6.' ]
+}
+
+@test "_getopts --short-description=123" {
+	run _getopts --short-description=123
+	[ "$status" -eq 4 ]
+}
+
+# -t, --ttl
+
+@test "_getopts -t 123" {
+	_getopts -t 123
+	[ "$OPT_TTL" -eq 123 ]
+}
+
+@test "_getopts -t" {
+	run _getopts -t
+	[ "$status" -eq 3 ]
+}
+
+@test "_getopts --ttl=123" {
+	_getopts --ttl=123
+	[ "$OPT_TTL" -eq 123 ]
+}
+
+@test "_getopts --ttl" {
+	run _getopts --ttl
+	[ "$status" -eq 3 ]
+}
+
+# -v, --version
+
+@test "_getopts -v" {
+	run _getopts -v
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = "1.0" ]
+}
+
+@test "_getopts --version" {
+	run _getopts --version
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = "1.0" ]
+}
+
+@test "_getopts --version=123" {
+	run _getopts --version=123
+	[ "$status" -eq 4 ]
+}
