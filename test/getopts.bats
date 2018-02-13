@@ -80,6 +80,51 @@ setup() {
 	[ "$status" -eq 4 ]
 }
 
+# -k, --key-file
+
+@test "_getopts -k 123" {
+	_getopts -k 123
+	[ "$OPT_KEY_FILE" -eq 123 ]
+}
+
+@test "_getopts -k" {
+	run _getopts -k
+	[ "$status" -eq 3 ]
+}
+
+@test "_getopts --key-file=123" {
+	_getopts --key-file=123
+	[ "$OPT_KEY_FILE" -eq 123 ]
+}
+
+@test "_getopts --key-file" {
+	run _getopts --key-file
+	[ "$status" -eq 3 ]
+}
+
+# -l, --literal-key
+
+@test "_getopts -l 123" {
+	_getopts -l 123
+	[ "$OPT_LITERAL_KEY" -eq 123 ]
+}
+
+@test "_getopts -l" {
+	run _getopts -l
+	[ "$status" -eq 3 ]
+}
+
+@test "_getopts --literal-key=123" {
+	_getopts --literal-key=123
+	[ "$OPT_LITERAL_KEY" -eq 123 ]
+}
+
+@test "_getopts --literal-key" {
+	run _getopts --literal-key
+	[ "$status" -eq 3 ]
+}
+
+
 # -n, --name-server
 
 @test "_getopts -n 123" {
@@ -99,28 +144,6 @@ setup() {
 
 @test "_getopts --name-server" {
 	run _getopts --name-server
-	[ "$status" -eq 3 ]
-}
-
-# -p, --private-key
-
-@test "_getopts -p 123" {
-	_getopts -p 123
-	[ "$OPT_PRIVATE_KEY" -eq 123 ]
-}
-
-@test "_getopts -p" {
-	run _getopts -p
-	[ "$status" -eq 3 ]
-}
-
-@test "_getopts --private-key=123" {
-	_getopts --private-key=123
-	[ "$OPT_PRIVATE_KEY" -eq 123 ]
-}
-
-@test "_getopts --private-key" {
-	run _getopts --private-key
 	[ "$status" -eq 3 ]
 }
 

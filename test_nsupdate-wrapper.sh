@@ -4,4 +4,6 @@
 	--zone=jf-dyndns.cf. \
 	--name-server=ns.friedrich.rocks \
 	--record=w-wnas.jf-dyndns.cf. \
-	--private-key=Kjf-dyndns.cf.+163+43844.key 
+	--literal-key='hmac-sha256:jf-dyndns.cf:n+WgaHXqgopqlovvjfwnF+TEDUVIQXIXQ0ni+HOQew8='
+
+	#--key-file=Kjf-dyndns.cf.+163+43844.key 

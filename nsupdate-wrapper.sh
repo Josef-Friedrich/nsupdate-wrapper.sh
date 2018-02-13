@@ -31,7 +31,7 @@ PROJECT_PAGES="https://github.com/JosefFriedrich-shell/nsupdate-wrapper.sh"
 SHORT_DESCRIPTION='Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6.'
 USAGE="$NAME v$VERSION
 
-Usage: $NAME [-46dhnprstvz]
+Usage: $NAME [-46dhklnrstvz]
 
 $SHORT_DESCRIPTION
 
@@ -44,10 +44,17 @@ Options:
 	  The interface (device to look for an IP address), e. g. “eth0”
 	-h, --help
 	  Show this help message.
+	-k, --key-file
+	  Path to private key.
+	-l, --literal-key [hmac:]keyname:secret
+	  Literal TSIG authentication key. keyname is the name of the
+	  key, and secret is the base64 encoded shared secret. hmac is
+	  the name of the key algorithm; valid choices are hmac-md5,
+	  hmac-sha1, hmac-sha224, hmac-sha256, hmac-sha384, or
+	  hmac-sha512. If hmac is not specified, the default is
+	  hmac-md5. For example: hmac-sha256:example.com:n+WgaHX...0ni+HOQew8=
 	-n, --nameserver
 	  DNS server to send updates to, e. g. “ns.example.com”
-	-p, --private-key
-	  Path to private key.
 	-r, --record
 	  Record to update, e. g. “subdomain.example.com.”
 	-s, --short-description
@@ -68,14 +75,15 @@ Options:
 # Missing argument: 3
 # No argument allowed: 4
 _getopts() {
-	while getopts ':46d:hn:p:r:st:vz:-:' OPT ; do
+	while getopts ':46d:hk:l:n:r:st:vz:-:' OPT ; do
 		case $OPT in
 			4) OPT_IPV4=1 ;;
 			6) OPT_IPV6=1 ;;
 			d) OPT_DEVICE="$OPTARG" ;;
 			h) echo "$USAGE" ; exit 0 ;;
+			k) OPT_KEY_FILE="$OPTARG" ;;
+			l) OPT_LITERAL_KEY="$OPTARG" ;;
 			n) OPT_NAME_SERVER="$OPTARG" ;;
-			p) OPT_PRIVATE_KEY="$OPTARG" ;;
 			r) OPT_RECORD="$OPTARG" ;;
 			s) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
 			t) OPT_TTL="$OPTARG" ;;
@@ -92,15 +100,16 @@ _getopts() {
 					ipv6-only) OPT_IPV6=1 ;;
 					device=?*) OPT_DEVICE="$LONG_OPTARG" ;;
 					help) echo "$USAGE" ; exit 0 ;;
+					key-file=?*) OPT_KEY_FILE="$LONG_OPTARG" ;;
+					literal-key=?*) OPT_LITERAL_KEY="$LONG_OPTARG" ;;
 					name-server=?*) OPT_NAME_SERVER="$LONG_OPTARG" ;;
-					private-key=?*) OPT_PRIVATE_KEY="$LONG_OPTARG" ;;
 					record=?*) OPT_RECORD="$LONG_OPTARG" ;;
 					short-description) echo "$SHORT_DESCRIPTION" ; exit 0 ;;
 					ttl=?*) OPT_TTL="$LONG_OPTARG" ;;
 					version) echo "$VERSION" ; exit 0 ;;
 					zone=?*) OPT_ZONE="$LONG_OPTARG" ;;
 
-					device*|name-server*|private-key*|record*|ttl*|zone*)
+					device*|key-file*|literal-key*|name-server*|record*|ttl*|zone*)
 						echo "Option “--$OPTARG” requires an argument!" >&2
 						exit 3
 						;;
@@ -201,8 +210,18 @@ if [ -z "$OPT_IPV4" ] && [ -z "$OPT_IPV6" ]; then
 	OPT_IPV6=1
 fi
 
+if [ -n "$OPT_KEY_FILE" ] && [ -n "$OPT_LITERAL_KEY" ] ; then
+	echo 'Select one option. Both options are not allowed: “--key-file” or “--literal-key”' >&2
+	exit 12
+fi
+
+if [ -n  "$OPT_KEY_FILE" ]; then
+	AUTH="-k $OPT_KEY_FILE"
+elif [ -n  "$OPT_LITERAL_KEY" ]; then
+	AUTH="-y $OPT_LITERAL_KEY"
+fi
 if [ -n "$OPT_IPV4" ]; then
 	IPV4="$(_get_external_ipv4)"
 	_get_nsupdate_commands
-	_get_nsupdate_commands | nsupdate -k"$OPT_PRIVATE_KEY"
+	_get_nsupdate_commands | nsupdate $AUTH
 fi
