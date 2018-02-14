@@ -129,21 +129,25 @@ _getopts() {
 	GETOPTS_SHIFT=$((OPTIND - 1))
 }
 
-_get_ipv4() {
-	ipaddr=`ip -4 addr show dev ${wan} | grep inet | sed -e 's/.*inet \([.0-9]*\).*/\1/'`
+########################################################################
 
+_get_ipv4() {
+	if [ -z "$OPT_DEVICE" ] ; then
+		echo "No device given!" >&2
+		exit 9
+	fi
+	ip -4 addr show dev $OPT_DEVICE | \
+		grep inet | \
+		sed -e 's/.*inet \([.0-9]*\).*/\1/'
 }
 
 # https://github.com/phoemur/ipgetter/blob/master/ipgetter.py
 _get_external_ipv4() {
 	# http://myexternalip.com/raw
-	$BINARY http://v4.ident.me/
+	$BINARY http://v4.ident.me
 }
 
-
-_get_external_ipv6() {
-	http://v6.ident.me/
-}
+########################################################################
 
 _get_ipv6() {
 	if [ -z "$OPT_DEVICE" ] ; then
@@ -154,6 +158,12 @@ _get_ipv6() {
 		grep -v " fd" | \
 		sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1
 }
+
+_get_external_ipv6() {
+	$BINARY http://v6.ident.me
+}
+
+########################################################################
 
 _get_nsupdate_commands() {
 	if [ -n "$IPV6" ]; then
@@ -210,7 +220,7 @@ if [ -z "$OPT_IPV4" ] && [ -z "$OPT_IPV6" ]; then
 fi
 
 if [ -n "$OPT_KEY_FILE" ] && [ -n "$OPT_LITERAL_KEY" ] ; then
-	echo 'Select one option. Both options are not allowed: “--key-file” or “--literal-key”' >&2
+	echo 'Select only one option. Both options are not allowed: “--key-file” or “--literal-key”' >&2
 	exit 12
 fi
 
