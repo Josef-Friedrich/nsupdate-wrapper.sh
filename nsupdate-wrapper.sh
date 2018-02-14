@@ -214,9 +214,9 @@ if [ -n "$OPT_KEY_FILE" ] && [ -n "$OPT_LITERAL_KEY" ] ; then
 	exit 12
 fi
 
-if [ -n  "$OPT_KEY_FILE" ]; then
+if [ -n "$OPT_KEY_FILE" ]; then
 	AUTH="-k $OPT_KEY_FILE"
-elif [ -n  "$OPT_LITERAL_KEY" ]; then
+elif [ -n "$OPT_LITERAL_KEY" ]; then
 	AUTH="-y $OPT_LITERAL_KEY"
 fi
 
