@@ -15,13 +15,14 @@ setup() {
 	[ "$status" -eq 0 ]
 }
 
+ARGUMENTS="--zone=example.com. \
+--name-server=ns.example.com \
+--record=sub.example.com. \
+--device=eno1 \
+--literal-key=hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQXIXQ0ni+HOQew8="
+
 @test "./nsupdate-wrapper.sh full example" {
-	run ./nsupdate-wrapper.sh \
-		--zone=example.com. \
-		--name-server=ns.example.com \
-		--record=sub.example.com. \
-		--device=eno1 \
-		--literal-key='hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQXIXQ0ni+HOQew8='
+	run ./nsupdate-wrapper.sh $ARGUMENTS
 	[ "$status" -eq 0 ]
 	[ "${lines[0]}" = 'Input: server ns.example.com' ]
 	[ "${lines[1]}" = 'Input: zone example.com.' ]
@@ -36,4 +37,25 @@ setup() {
 	[ "${lines[10]}" = 'Input: update delete sub.example.com. AAAA' ]
 	[ "${lines[11]}" = 'Input: update add sub.example.com. 3600 AAAA 200c:ef45:4c06:3300:b832:fe2d:bb21:60bd' ]
 	#echo ${lines[11]} > $HOME/debug
+}
+
+@test "./nsupdate-wrapper.sh -4" {
+	run ./nsupdate-wrapper.sh -4 $ARGUMENTS
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = 'Input: server ns.example.com' ]
+	[ "${lines[1]}" = 'Input: zone example.com.' ]
+	[ "${lines[2]}" = 'Input: update delete sub.example.com. A' ]
+	[ "${lines[3]}" = 'Input: update add sub.example.com. 3600 A 1.2.3.4' ]
+	[ "${lines[4]}" = 'Input: show' ]
+	[ "${lines[5]}" = 'Input: send' ]
+	[ "${lines[6]}" = 'Arg: -y' ]
+	[ "${lines[7]}" = 'Arg: hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQXIXQ0ni+HOQew8=' ]
+	[ -z "${lines[8]}" ]
+}
+
+@test "./nsupdate-wrapper.sh -6" {
+	run ./nsupdate-wrapper.sh -6 $ARGUMENTS
+	[ "$status" -eq 0 ]
+	[ "${lines[2]}" = 'Input: update delete sub.example.com. AAAA' ]
+	[ -z "${lines[8]}" ]
 }
