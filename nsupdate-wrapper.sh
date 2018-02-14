@@ -131,15 +131,15 @@ _getopts() {
 
 ########################################################################
 
-_get_ipv4() {
-	if [ -z "$OPT_DEVICE" ] ; then
-		echo "No device given!" >&2
-		exit 9
-	fi
-	ip -4 addr show dev $OPT_DEVICE | \
-		grep inet | \
-		sed -e 's/.*inet \([.0-9]*\).*/\1/'
-}
+# _get_ipv4() {
+# 	if [ -z "$OPT_DEVICE" ] ; then
+# 		echo "No device given!" >&2
+# 		exit 9
+# 	fi
+# 	ip -4 addr show dev $OPT_DEVICE | \
+# 		grep inet | \
+# 		sed -e 's/.*inet \([.0-9]*\).*/\1/'
+# }
 
 # https://github.com/phoemur/ipgetter/blob/master/ipgetter.py
 _get_external_ipv4() {
@@ -159,9 +159,9 @@ _get_ipv6() {
 		sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1
 }
 
-_get_external_ipv6() {
-	$BINARY http://v6.ident.me
-}
+# _get_external_ipv6() {
+# 	$BINARY http://v6.ident.me
+# }
 
 ########################################################################
 
