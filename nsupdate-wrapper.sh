@@ -65,7 +65,6 @@ Options:
 	  Show the version number of this script.
 	-z, --zone
 	  Zone to update, e. g. “example.com.”
-
 "
 
 # See https://stackoverflow.com/a/28466267
