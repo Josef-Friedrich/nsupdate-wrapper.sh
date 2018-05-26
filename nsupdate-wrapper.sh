@@ -235,7 +235,7 @@ fi
 if [ -n "$OPT_IPV4" ]; then
 	IPV4="$(_get_external_ipv4)"
 	if [ -n "$IPV4" ]; then
-		_get_nsupdate_commands | nsupdate $AUTH
+		_get_nsupdate_commands | nsupdate -D $AUTH
 	fi
 fi
 
@@ -246,6 +246,6 @@ IPV4=
 if [ -n "$OPT_IPV6" ]; then
 	IPV6="$(_get_ipv6)"
 	if [ -n "$IPV6" ]; then
-		_get_nsupdate_commands | nsupdate $AUTH
+		_get_nsupdate_commands | nsupdate -D $AUTH
 	fi
 fi
