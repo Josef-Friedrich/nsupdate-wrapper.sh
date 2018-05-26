@@ -28,7 +28,7 @@ LITERAL_KEY="--literal-key=hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQ
 	[ "${lines[0]}" = 'Input: server ns.example.com' ]
 	[ "${lines[1]}" = 'Input: zone example.com.' ]
 	[ "${lines[2]}" = 'Input: update delete sub.example.com. A' ]
-	[ "${lines[3]}" = 'Input: update add sub.example.com. 3600 A 1.2.3.4' ]
+	[ "${lines[3]}" = 'Input: update add sub.example.com. 300 A 1.2.3.4' ]
 	[ "${lines[4]}" = 'Input: show' ]
 	[ "${lines[5]}" = 'Input: send' ]
 	[ "${lines[6]}" = 'Arg: -y' ]
@@ -36,7 +36,7 @@ LITERAL_KEY="--literal-key=hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQ
 	[ "${lines[8]}" = 'Input: server ns.example.com' ]
 	[ "${lines[9]}" = 'Input: zone example.com.' ]
 	[ "${lines[10]}" = 'Input: update delete sub.example.com. AAAA' ]
-	[ "${lines[11]}" = 'Input: update add sub.example.com. 3600 AAAA 200c:ef45:4c06:3300:b832:fe2d:bb21:60bd' ]
+	[ "${lines[11]}" = 'Input: update add sub.example.com. 300 AAAA 200c:ef45:4c06:3300:b832:fe2d:bb21:60bd' ]
 	#echo ${lines[11]} > $HOME/debug
 }
 
@@ -46,7 +46,7 @@ LITERAL_KEY="--literal-key=hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQ
 	[ "${lines[0]}" = 'Input: server ns.example.com' ]
 	[ "${lines[1]}" = 'Input: zone example.com.' ]
 	[ "${lines[2]}" = 'Input: update delete sub.example.com. A' ]
-	[ "${lines[3]}" = 'Input: update add sub.example.com. 3600 A 1.2.3.4' ]
+	[ "${lines[3]}" = 'Input: update add sub.example.com. 300 A 1.2.3.4' ]
 	[ "${lines[4]}" = 'Input: show' ]
 	[ "${lines[5]}" = 'Input: send' ]
 	[ "${lines[6]}" = 'Input: server ns.example.com' ]
@@ -65,7 +65,7 @@ LITERAL_KEY="--literal-key=hmac-sha256:example.com:n+WgaHXqgopqlovvjfwnF+TEDUVIQ
 	[ "${lines[0]}" = 'Input: server ns.example.com' ]
 	[ "${lines[1]}" = 'Input: zone example.com.' ]
 	[ "${lines[2]}" = 'Input: update delete sub.example.com. A' ]
-	[ "${lines[3]}" = 'Input: update add sub.example.com. 3600 A 1.2.3.4' ]
+	[ "${lines[3]}" = 'Input: update add sub.example.com. 300 A 1.2.3.4' ]
 	[ "${lines[4]}" = 'Input: show' ]
 	[ "${lines[5]}" = 'Input: send' ]
 	[ "${lines[6]}" = 'Arg: -y' ]

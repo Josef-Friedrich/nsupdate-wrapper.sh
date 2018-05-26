@@ -211,7 +211,7 @@ if [ -z "$OPT_NAME_SERVER" ] || [ -z "$OPT_ZONE" ] || [ -z "$OPT_RECORD" ]; then
 fi
 
 if [ -z "$OPT_TTL" ]; then
-	OPT_TTL=3600
+	OPT_TTL=300
 fi
 
 if [ -z "$OPT_IPV4" ] && [ -z "$OPT_IPV6" ]; then
