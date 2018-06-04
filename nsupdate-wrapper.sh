@@ -27,7 +27,7 @@ NAME="nsupdate-wrapper.sh"
 PROJECT_NAME="nsupdate-wrapper"
 FIRST_RELEASE=2018-02-13
 VERSION=1.0
-PROJECT_PAGES="https://github.com/JosefFriedrich-shell/nsupdate-wrapper.sh"
+PROJECT_PAGES="https://github.com/Josef-Friedrich/nsupdate-wrapper.sh"
 SHORT_DESCRIPTION='Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6.'
 USAGE="$NAME v$VERSION
 

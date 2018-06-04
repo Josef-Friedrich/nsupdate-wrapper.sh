@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/JosefFriedrich-shell/nsupdate-wrapper.svg?branch=master)](https://travis-ci.org/JosefFriedrich-shell/nsupdate-wrapper)
+[![Build Status](https://travis-ci.org/Josef-Friedrich/nsupdate-wrapper.svg?branch=master)](https://travis-ci.org/Josef-Friedrich/nsupdate-wrapper)
 
 # nsupdate-wrapper
 
@@ -51,7 +51,7 @@ Options:
 
 ## Project pages
 
-* https://github.com/JosefFriedrich-shell/nsupdate-wrapper.sh
+* https://github.com/Josef-Friedrich/nsupdate-wrapper.sh
 
 ## Testing
 
