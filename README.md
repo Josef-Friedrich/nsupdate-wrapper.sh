@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Josef-Friedrich/nsupdate-wrapper.svg?branch=master)](https://travis-ci.org/Josef-Friedrich/nsupdate-wrapper)
+[![Build Status](https://travis-ci.org/Josef-Friedrich/nsupdate-wrapper.sh.svg?branch=master)](https://travis-ci.org/Josef-Friedrich/nsupdate-wrapper.sh)
 
 # nsupdate-wrapper
 
