@@ -1,0 +1,1 @@
+Wrapper around nsupdate. Update your DNS server using nsupdate. Supports both ipv4 and ipv6. 
